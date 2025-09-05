@@ -1,10 +1,10 @@
-# Cert Monitor Pro
+# Cert Manager Pro
 
-A Python tool for SSL certificate monitoring and automated renewal management.
+A Python tool for SSL certificate managering and automated renewal management.
 
-## What is Cert Monitor Pro?
+## What is Cert Manager Pro?
 
-Cert Monitor Pro monitors SSL certificate expiration dates and automates certificate renewal processes to prevent unexpected website outages. Keep your certificates up to date without manual intervention.
+Cert Manager Pro monitors SSL certificate expiration dates and automates certificate renewal processes to prevent unexpected website outages. Keep your certificates up to date without manual intervention.
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ python cert_checker.py google.com
 
 ## Development Roadmap
 
-### Phase 1: Core Monitoring (Week 1-2)
+### Phase 1: Core Managering (Week 1-2)
 - [x] Basic certificate expiry checking
 - [ ] Error handling improvements
 - [ ] Better output formatting
@@ -71,20 +71,20 @@ python cert_checker.py example.com
 
 ### Planned Features
 ```bash
-# Monitor multiple domains
-python cert-monitor-pro.py --config domains.yml
+# Manager multiple domains
+python cert-manager-pro.py --config domains.yml
 
 # Check and renew certificates
-python cert-monitor-pro.py --renew --upload s3://my-bucket/certs/
+python cert-manager-pro.py --renew --upload s3://my-bucket/certs/
 
 # Run web dashboard
-python cert-monitor-pro.py --web --port 8080
+python cert-manager-pro.py --web --port 8080
 ```
 
 ## Project Structure
 
 ```
-cert-monitor-pro/
+cert-manager-pro/
 ├── cert_checker.py          # Current: Basic certificate checker
 ├── cert_renewer.py          # Week 3: Renewal logic
 ├── uploaders/               # Week 5: Upload handlers
@@ -126,8 +126,8 @@ Contributions are welcome! This project follows standard open source practices.
 
 ### Development Setup
 ```bash
-git clone https://github.com/yourusername/cert-monitor-pro
-cd cert-monitor-pro
+git clone https://github.com/GiovaniDeJesus/cert-manager-pro
+cd cert-manager-pro
 python cert_checker.py google.com
 ```
 
@@ -143,7 +143,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Project Goals
 
-Cert Monitor Pro is designed to become a comprehensive SSL certificate management solution:
+Cert Manager Pro is designed to become a comprehensive SSL certificate management solution:
 - **Simple** - Easy setup for individuals and small teams
 - **Powerful** - Enterprise-grade features for larger organizations  
 - **Reliable** - Automated monitoring prevents certificate expiration
