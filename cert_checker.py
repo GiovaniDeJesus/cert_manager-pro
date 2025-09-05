@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from datetime import datetime, UTC
-import socket
-import ssl
+import socket, ssl, sys
 
-hostname = 'www.example.com'
+
+hostname = sys.argv[1]
 context = ssl.create_default_context()
 with socket.create_connection((hostname, 443)) as sock:
     with context.wrap_socket(sock, server_hostname=hostname) as ssock:
