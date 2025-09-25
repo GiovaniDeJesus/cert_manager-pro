@@ -3,6 +3,23 @@ from datetime import datetime, UTC
 import socket, ssl, sys
 
 
+def clean_hostname(hostname):
+    """Clean common hostname input mistakes."""
+    # Remove protocol prefixes
+    hostname = hostname.replace('https://', '').replace('http://', '')
+    
+    # Remove trailing slash and any path
+    hostname = hostname.split('/')[0]
+    
+    # Convert to lowercase (hostnames are case-insensitive)
+    hostname = hostname.lower()
+    
+    # Handle hostname:port format (extract just hostname)
+    if ':' in hostname:
+        hostname = hostname.split(':')[0]
+    
+    return hostname
+
 def get_cert_data(hostname, port):
     """Retrieves SSL certificate and calculates time until expiry."""
     try:
@@ -48,7 +65,8 @@ if __name__ == "__main__":
         try:
             port = int(sys.argv[2])
             if 1 <= port <= 65535:
-                result = get_cert_data(sys.argv[1], sys.argv[2])
+                clean_host = clean_hostname(sys.argv[1])
+                result = get_cert_data(clean_host, sys.argv[2])
                 if result is not None:
                     print(result)
             else:
