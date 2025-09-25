@@ -4,7 +4,7 @@ import socket, ssl, sys
 
 
 def get_cert_data(hostname, port):
-    """Creates connection string and gets certificate information"""
+    """Retrieves SSL certificate and calculates time until expiry."""
     try:
         port = int(port)
         context = ssl.create_default_context()   
@@ -32,9 +32,10 @@ def get_cert_data(hostname, port):
     
 
 def cal_date(cert):
-    """Pharse the cert information and calculate how much time is left"""
+    """Calculates time remaining until certificate expires."""
     not_after = cert["notAfter"]
-    # Calculate difference from current UTC time
+    
+    # Certificate dates are in GMT format: "Dec 31 23:59:59 2024 GMT"
     expiry = datetime.strptime(not_after, "%b %d %H:%M:%S %Y %Z")
     now = datetime.now(UTC)
     delta = expiry.replace(tzinfo=UTC) - now
