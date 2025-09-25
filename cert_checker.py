@@ -74,7 +74,6 @@ if __name__ == "__main__":
         except ValueError:
             print(f"Error: '{sys.argv[2]}' is not a valid port number")
     else:
-        # Usage already in the right place!
         print(f"Usage: {sys.argv[0]} domain_name port_number")
         print(f"Example: {sys.argv[0]} example.com 443")
         
