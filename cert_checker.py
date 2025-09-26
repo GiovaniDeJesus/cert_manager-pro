@@ -6,7 +6,7 @@ import socket, ssl, sys
 def clean_hostname(hostname):
     """Clean common hostname input mistakes."""
     # Remove protocol prefixes
-    hostname = hostname.replace('https://', '').replace('http://', '')
+    hostname = hostname.lower().replace('https://', '').replace('http://', '')
     
     # Remove trailing slash and any path
     hostname = hostname.split('/')[0]

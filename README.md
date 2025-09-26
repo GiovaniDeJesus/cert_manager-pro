@@ -1,156 +1,106 @@
-# Cert Manager Pro
+# Cert Monitor Pro
 
-A Python tool for SSL certificate managering and automated renewal management.
+A Python tool for monitoring SSL certificate expiration dates and automating certificate management workflows.
 
-## What is Cert Manager Pro?
+## What Is This?
 
-Cert Manager Pro monitors SSL certificate expiration dates and automates certificate renewal processes to prevent unexpected website outages. Keep your certificates up to date without manual intervention.
+SSL certificates expire, and when they do, websites go down. This tool helps prevent those midnight emergencies by monitoring certificate expiry dates and (eventually) automating the renewal process.
 
-## Quick Start
+I started with a bash script that did basic certificate checking, but realized Python would give me much more flexibility for adding features like web dashboards, automated renewals, and multi-cloud deployment support.
+
+## Current Status (Week 1)
+
+Right now, this is a command-line tool that checks individual SSL certificates and tells you how much time is left before they expire.
+
+### What Works
+
+- Check any SSL certificate expiration date
+- Handles common input mistakes (strips `https://`, trailing slashes, etc.)
+- Robust error handling for network issues, DNS problems, and SSL errors
+- Clean command-line interface
+- Detects expired certificates
+
+### Usage
 
 ```bash
-# Check a certificate
-python cert_checker.py google.com
+python cert_checker.py google.com 443
+# Output: 67 days, 12:48:30.976882
 
-# Example output:
-# Certificate for google.com expires in 92 days
+python cert_checker.py expired.badssl.com 443  
+# Output: Error: SSL error for 'expired.badssl.com': certificate has expired
+
+python cert_checker.py https://GITHUB.COM/ 443
+# Output: 89 days, 3:22:15.123456
 ```
+
+The tool handles various input formats and provides clear error messages when things go wrong.
+
+## Development Process
+
+This project follows a structured approach with weekly milestones. Each week's code is analyzed with SonarQube to maintain code quality and catch potential issues early. 
+
+SonarQube analysis helps ensure the codebase stays maintainable as features are added, and provides objective metrics for code quality improvements.
+
+## Roadmap
+
+### Week 2: Multi-Domain Support (Next)
+- Check multiple certificates at once
+- Configuration file support (YAML)
+- Tabular output with status indicators
+- Enhanced command-line interface
+
+### Week 3-4: Automation
+- Scheduled monitoring
+- Integration with Let's Encrypt for automatic renewal
+- Email and webhook notifications
+- Configuration management
+
+### Week 5-6: Deployment & Upload
+- Upload renewed certificates to cloud providers (AWS, GCP, Azure)
+- SFTP and webhook deployment options
+- Certificate deployment automation
+
+### Week 7-8: Web Interface
+- FastAPI-based dashboard
+- REST API endpoints
+- Certificate management interface
+- Historical tracking and reporting
+
+### Future Enhancements
+- Support for commercial certificate authorities (DigiCert, Sectigo, etc)
+- Team collaboration features
+- Enterprise integrations
+- Multi-tenant support
+
+## The Big Picture
+
+The goal is to build a comprehensive SSL certificate management platform that handles the entire lifecycle:
+
+1. **Monitor** certificates across your infrastructure
+2. **Alert** when certificates are approaching expiry
+3. **Renew** certificates automatically where possible
+4. **Deploy** renewed certificates to the right places
+5. **Track** certificate history and compliance
+
+Many companies struggle with certificate management across multiple domains, cloud providers, and teams. This tool aims to centralize that process while remaining flexible enough for different infrastructure setups.
+
+## Technical Philosophy
+
+- **Start simple, add complexity gradually** - Each week builds on the previous foundation
+- **Code quality matters** - Regular SonarQube analysis ensures maintainable code
+- **Real-world focus** - Built to solve actual SSL certificate pain points
+- **Flexible architecture** - Designed to work with any hosting setup or cloud provider
 
 ## Requirements
 
-- Python 3.7 or higher
-- Built-in Python libraries only (no external dependencies)
-
-## Current Features
-
-- Check SSL certificate expiration for any domain
-- Command-line interface
-- Zero external dependencies
-
-## Development Roadmap
-
-### Phase 1: Core Managering (Week 1-2)
-- [x] Basic certificate expiry checking
-- [ ] Error handling improvements
-- [ ] Better output formatting
-- [ ] Multiple domain support
-
-### Phase 2: Automation (Week 3-4)
-- [ ] Scheduled certificate monitoring
-- [ ] Certificate renewal with Let's Encrypt/Certbot
-- [ ] Configuration file support
-- [ ] Email and webhook notifications
-
-### Phase 3: Upload & Deploy (Week 5-6)
-- [ ] Upload renewed certificates to:
-  - AWS S3/CloudFront
-  - Google Cloud Storage  
-  - Azure Blob Storage
-  - SFTP servers
-  - Custom webhook endpoints
-
-### Phase 4: Web Interface (Week 7-8)
-- [ ] FastAPI web dashboard
-- [ ] REST API endpoints
-- [ ] Certificate management interface
-- [ ] Historical monitoring data
-
-### Phase 5: Enterprise Features (Future)
-- [ ] Multi-user support
-- [ ] Team collaboration
-- [ ] Audit logs
-- [ ] Wildcard certificate support
-- [ ] Custom certificate authorities
-
-## Usage
-
-### Basic Certificate Check
-```bash
-python cert_checker.py example.com
-```
-
-### Planned Features
-```bash
-# Manager multiple domains
-python cert-manager-pro.py --config domains.yml
-
-# Check and renew certificates
-python cert-manager-pro.py --renew --upload s3://my-bucket/certs/
-
-# Run web dashboard
-python cert-manager-pro.py --web --port 8080
-```
-
-## Project Structure
-
-```
-cert-manager-pro/
-├── cert_checker.py          # Current: Basic certificate checker
-├── cert_renewer.py          # Week 3: Renewal logic
-├── uploaders/               # Week 5: Upload handlers
-│   ├── aws.py
-│   ├── gcp.py
-│   └── sftp.py
-├── web/                     # Week 7: Web interface
-│   ├── app.py
-│   └── templates/
-├── config/
-│   └── domains.example.yml
-├── tests/
-├── requirements.txt
-├── LICENSE
-└── README.md
-```
-
-## Current Development Status
-
-**Week 1 Progress:**
-- [x] Core SSL certificate checking functionality
-- [x] Command-line interface
-- [ ] Error handling improvements
-- [ ] Output formatting enhancements
-- [ ] Multiple domain support
-
-**Currently Working:**
-- Check SSL certificate expiry for any domain
-- Basic command-line usage
-
-**In Development:**
-- Improved error messages
-- User-friendly output format
-- Edge case handling
+- Python 3.7+
+- No external dependencies (current version uses only built-in libraries)
 
 ## Contributing
 
-Contributions are welcome! This project follows standard open source practices.
-
-### Development Setup
-```bash
-git clone https://github.com/GiovaniDeJesus/cert-manager-pro
-cd cert-manager-pro
-python cert_checker.py google.com
-```
-
-### Guidelines
-- Write clean, readable code
-- Add tests for new features
-- Update documentation
-- Follow PEP 8 style guidelines
+This is primarily a learning project, but the code is structured to be maintainable and extensible. Each week's development includes comprehensive testing and code quality analysis.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - See LICENSE file for details.
 
-## Project Goals
-
-Cert Manager Pro is designed to become a comprehensive SSL certificate management solution:
-- **Simple** - Easy setup for individuals and small teams
-- **Powerful** - Enterprise-grade features for larger organizations  
-- **Reliable** - Automated monitoring prevents certificate expiration
-- **Flexible** - Compatible with any hosting setup or cloud provider
-
-## Support
-
-- Star this repository if you find it useful
-- Open an issue for questions or bug reports
-- Contributions and feedback are welcome
