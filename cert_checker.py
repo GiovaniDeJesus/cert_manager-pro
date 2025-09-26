@@ -15,8 +15,8 @@ def clean_hostname(hostname):
     hostname = hostname.lower()
     
     # Handle hostname:port format (extract just hostname)
-    if ':' in hostname:
-        hostname = hostname.split(':')[0]
+
+    hostname = hostname.split(':')[0]
     
     return hostname
 

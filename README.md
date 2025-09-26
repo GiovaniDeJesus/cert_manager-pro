@@ -12,6 +12,77 @@ I started with a bash script that did basic certificate checking, but realized P
 
 Right now, this is a command-line tool that checks individual SSL certificates and tells you how much time is left before they expire.
 
+## Architecture Overview
+
+The tool follows a complete certificate management lifecycle:
+
+graph TD
+    A[Infrastructure Discovery] --> B[Certificate Monitoring]
+    
+    B --> C{Certificate Status}
+    C -->|Valid| D[Schedule Next Check]
+    C -->|Warning 30 days| E[Send Alert]
+    C -->|Critical 7 days| F[Urgent Alert]
+    C -->|Expired| G[Emergency Alert]
+    
+    E --> H[Renewal Decision]
+    F --> H
+    G --> H
+    
+    H --> I{Renewal Method}
+    I -->|Let's Encrypt| J[Automated Renewal]
+    I -->|Commercial CA| K[Manual Process]
+    I -->|Internal CA| L[Custom Workflow]
+    
+    J --> M[Certificate Obtained]
+    K --> M
+    L --> M
+    
+    M --> N{Deployment Targets}
+    N -->|AWS| O[CloudFront/ALB]
+    N -->|GCP| P[Load Balancer]
+    N -->|Azure| Q[Application Gateway]
+    N -->|On-Premise| R[Web Servers]
+    N -->|CDN| S[Content Delivery]
+    
+    O --> T[Verify Deployment]
+    P --> T
+    Q --> T
+    R --> T
+    S --> T
+    
+    T --> U[Update Certificate Database]
+    U --> V[Generate Compliance Report]
+    V --> W[Archive Old Certificate]
+    W --> D
+    
+    D --> B
+    
+    subgraph "Alert Channels"
+        E --> E1[Email]
+        F --> F1[Slack/Teams]
+        G --> G1[PagerDuty/SMS]
+        E --> E2[Dashboard]
+        F --> E2
+        G --> E2
+    end
+    
+    subgraph "Tracking & Compliance"
+        U --> U1[Certificate History]
+        V --> V1[Audit Logs]
+        W --> W1[Retention Policy]
+        U1 --> U2[Expiry Trends]
+        V1 --> V2[Compliance Status]
+    end
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style J fill:#e8f5e8
+    style T fill:#fff3e0
+    style V fill:#fce4ec
+
+This diagram shows the five core phases: Monitor → Alert → Renew → Deploy → Track, with the supporting systems for notifications and compliance.
+
 ### What Works
 
 - Check any SSL certificate expiration date
