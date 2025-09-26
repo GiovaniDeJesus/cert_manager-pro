@@ -15,7 +15,7 @@ Right now, this is a command-line tool that checks individual SSL certificates a
 ## Architecture Overview
 
 The tool follows a complete certificate management lifecycle:
-
+```mermaid 
 graph TD
     A[Infrastructure Discovery] --> B[Certificate Monitoring]
     
@@ -80,7 +80,7 @@ graph TD
     style J fill:#e8f5e8
     style T fill:#fff3e0
     style V fill:#fce4ec
-
+```
 This diagram shows the five core phases: Monitor → Alert → Renew → Deploy → Track, with the supporting systems for notifications and compliance.
 
 ### What Works
