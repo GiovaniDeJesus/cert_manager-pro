@@ -1,21 +1,45 @@
 # Cert Monitor Pro
 
-A Python tool for monitoring SSL certificate expiration dates and automating certificate management workflows.
+A Python tool for monitoring SSL certificate expiration and automating certificate management across infrastructure.
 
 ## What Is This?
 
-SSL certificates expire, and when they do, websites go down. This tool helps prevent those midnight emergencies by monitoring certificate expiry dates and (eventually) automating the renewal process.
+SSL certificates expire. When they do, websites go down and incidents happen. This tool monitors certificate expiry dates and automates renewal workflows to prevent those problems.
 
-I started with a bash script that did basic certificate checking, but realized Python would give me much more flexibility for adding features like web dashboards, automated renewals, and multi-cloud deployment support.
+I started with a bash script for basic certificate checking, but realized Python would provide better flexibility for features like web dashboards, automated renewals, and multi-cloud deployment support.
 
-## Current Status (Week 1)
+## Current Status
 
-Right now, this is a command-line tool that checks individual SSL certificates and tells you how much time is left before they expire.
+This is a command-line tool that checks SSL certificates and reports time remaining until expiration.
+
+### What Works Now
+
+- Check any SSL certificate expiration date
+- Input cleaning (strips `https://`, trailing slashes, handles mixed case)
+- Network error handling (DNS failures, timeouts, connection refused)
+- SSL error detection (expired certificates, validation failures)
+- Clear command-line interface with proper validation
+
+### Usage
+
+```bash
+python cert_checker.py google.com 443
+# Output: 67 days, 12:48:30.976882
+
+python cert_checker.py expired.badssl.com 443  
+# Output: Error: SSL error for 'expired.badssl.com': certificate has expired
+
+python cert_checker.py https://GITHUB.COM/ 443
+# Output: 89 days, 3:22:15.123456
+```
+
+The tool handles various input formats and provides clear error messages when things fail.
 
 ## Architecture Overview
 
 The tool follows a complete certificate management lifecycle:
-```mermaid 
+
+```mermaid
 graph TD
     A[Infrastructure Discovery] --> B[Certificate Monitoring]
     
@@ -31,8 +55,8 @@ graph TD
     
     H --> I{Renewal Method}
     I -->|Let's Encrypt| J[Automated Renewal]
-    I -->|Commercial CA| K[Manual Process]
-    I -->|Internal CA| L[Custom Workflow]
+    I -->|Commercial CA| K[API-Based Renewal]
+    I -->|Manual Process| L[Workflow Support]
     
     J --> M[Certificate Obtained]
     K --> M
@@ -81,97 +105,84 @@ graph TD
     style T fill:#fff3e0
     style V fill:#fce4ec
 ```
-This diagram shows the five core phases: Monitor → Alert → Renew → Deploy → Track, with the supporting systems for notifications and compliance.
 
-### What Works
+This diagram shows the five core phases: Monitor → Alert → Renew → Deploy → Track, with supporting systems for notifications and compliance.
 
-- Check any SSL certificate expiration date
-- Handles common input mistakes (strips `https://`, trailing slashes, etc.)
-- Robust error handling for network issues, DNS problems, and SSL errors
-- Clean command-line interface
-- Detects expired certificates
+## Development Approach
 
-### Usage
+Each development phase is analyzed with SonarQube to maintain code quality and catch potential issues. This ensures the codebase stays maintainable as features are added and provides objective metrics for improvement.
 
-```bash
-python cert_checker.py google.com 443
-# Output: 67 days, 12:48:30.976882
+The focus is on building secure, well-tested code that handles certificates and credentials properly. Security tooling is added progressively:
+- Code quality analysis with SonarQube
+- Dependency scanning with pip-audit or safety
+- Web security testing (OWASP ZAP) when web components are added
+- Regular security reviews of API integrations and authentication
 
-python cert_checker.py expired.badssl.com 443  
-# Output: Error: SSL error for 'expired.badssl.com': certificate has expired
+## Development Roadmap
 
-python cert_checker.py https://GITHUB.COM/ 443
-# Output: 89 days, 3:22:15.123456
-```
+### Phase 1: Foundation (Complete)
+- Basic certificate checking
+- Error handling and input validation
+- Command-line interface
+- Code quality baseline
 
-The tool handles various input formats and provides clear error messages when things go wrong.
-
-## Development Process
-
-This project follows a structured approach with weekly milestones. Each week's code is analyzed with SonarQube to maintain code quality and catch potential issues early. 
-
-SonarQube analysis helps ensure the codebase stays maintainable as features are added, and provides objective metrics for code quality improvements.
-
-## Roadmap
-
-### Week 2: Multi-Domain Support (Next)
-- Check multiple certificates at once
-- Configuration file support (YAML)
+### Phase 2: Multi-Domain Support
+- Check multiple certificates simultaneously
+- YAML configuration file support
 - Tabular output with status indicators
-- Enhanced command-line interface
+- Enhanced command-line options
 
-### Week 3-4: Automation
+### Phase 3: Automation
 - Scheduled monitoring
-- Integration with Let's Encrypt for automatic renewal
+- Let's Encrypt integration for automated renewal
 - Email and webhook notifications
-- Configuration management
+- Alert threshold configuration
 
-### Week 5-6: Deployment & Upload
-- Upload renewed certificates to cloud providers (AWS, GCP, Azure)
+### Phase 4: Deployment
+- Upload to cloud providers (AWS, GCP, Azure)
 - SFTP and webhook deployment options
 - Certificate deployment automation
+- Rollback capabilities
 
-### Week 7-8: Web Interface
+### Phase 5: Web Interface
 - FastAPI-based dashboard
 - REST API endpoints
 - Certificate management interface
 - Historical tracking and reporting
 
-### Future Enhancements
-- Support for commercial certificate authorities (DigiCert, Sectigo, etc)
-- Team collaboration features
-- Enterprise integrations
-- Multi-tenant support
+### Phase 6: Enterprise Features
+- Commercial CA integrations (DigiCert, Sectigo)
+- Team collaboration and permissions
+- Advanced audit logging
+- Custom workflow support
 
 ## The Big Picture
 
-The goal is to build a comprehensive SSL certificate management platform that handles the entire lifecycle:
+The goal is a comprehensive SSL certificate management platform handling the complete lifecycle:
 
-1. **Monitor** certificates across your infrastructure
-2. **Alert** when certificates are approaching expiry
+1. **Monitor** certificates across infrastructure
+2. **Alert** when certificates approach expiry
 3. **Renew** certificates automatically where possible
-4. **Deploy** renewed certificates to the right places
+4. **Deploy** renewed certificates to the right locations
 5. **Track** certificate history and compliance
 
-Many companies struggle with certificate management across multiple domains, cloud providers, and teams. This tool aims to centralize that process while remaining flexible enough for different infrastructure setups.
+Many organizations struggle with certificate management across multiple domains, cloud providers, and teams. This tool centralizes that process while remaining flexible for different infrastructure setups.
+
+Commercial CA automation is available for organizations using API-enabled certificate authorities. The open source version focuses on Let's Encrypt automation, with commercial CA support available as enterprise features or custom integrations.
 
 ## Technical Philosophy
 
-- **Start simple, add complexity gradually** - Each week builds on the previous foundation
-- **Code quality matters** - Regular SonarQube analysis ensures maintainable code
-- **Real-world focus** - Built to solve actual SSL certificate pain points
-- **Flexible architecture** - Designed to work with any hosting setup or cloud provider
+- Start simple, add complexity gradually
+- Code quality matters - regular analysis prevents technical debt
+- Built for real infrastructure problems, not theoretical use cases
+- Flexible architecture works with any hosting setup or cloud provider
+- Security by design, not as an afterthought
 
 ## Requirements
 
-- Python 3.7+
-- No external dependencies (current version uses only built-in libraries)
-
-## Contributing
-
-This is primarily a learning project, but the code is structured to be maintainable and extensible. Each week's development includes comprehensive testing and code quality analysis.
+- Python 3.12+
+- No external dependencies (current version uses built-in libraries only)
 
 ## License
 
 MIT License - See LICENSE file for details.
-

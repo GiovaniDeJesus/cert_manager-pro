@@ -5,17 +5,10 @@ import socket, ssl, sys
 
 def clean_hostname(hostname):
     """Clean common hostname input mistakes."""
-    # Remove protocol prefixes
-    hostname = hostname.lower().replace('https://', '').replace('http://', '')
-    
-    # Remove trailing slash and any path
-    hostname = hostname.split('/')[0]
-    
-    # Convert to lowercase (hostnames are case-insensitive)
-    hostname = hostname.lower()
-    
-    # Handle hostname:port format (extract just hostname)
 
+    hostname = hostname.lower().replace('https://', '').replace('http://', '')
+    hostname = hostname.split('/')[0]
+    hostname = hostname.lower()
     hostname = hostname.split(':')[0]
     
     return hostname
